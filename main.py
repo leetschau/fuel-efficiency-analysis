@@ -8,7 +8,8 @@ Created on Wed Aug 16 12:13:11 2017
 This script is the implementation of chapter 7 "Driving Visual Analyses with Automobile Data" 
 of "Practical Data Science Cookbook" by Tony Ojeda, etc.
 """
-#%%
+#%%  Section Analyzing automobile fuel efficiency over time with Python
+# -------------------------------------------
 import pandas as pd
 import numpy as np
 
@@ -81,3 +82,7 @@ melted_avg_grouped_by_year = pd.melt(avg_grouped_by_year, id_vars='year')
 from ggplot import facet_wrap
 p = ggplot(aes(x='year', y='value', color='variable_0'), data=melted_avg_grouped_by_year)
 p + geom_point() + facet_wrap('variable_0')
+
+
+#%%  Section Investigating the makes and models of automobiles with Python
+# -------------------------------------------
