@@ -85,4 +85,38 @@ p + geom_point() + facet_wrap('variable_0')
 
 
 #%%  Section Investigating the makes and models of automobiles with Python
-# -------------------------------------------
+# ------ step 1, 2 ------------------
+pd.unique(vehicles_non_hybrid.cylinders)
+vehicles_non_hybrid.cylinders = vehicles_non_hybrid.cylinders.astype('float')
+pd.unique(vehicles_non_hybrid.cylinders)
+vehicles_non_hybrid_4 = vehicles_non_hybrid[(vehicles_non_hybrid.cylinders == 4.0)]
+
+#%% step 3
+import matplotlib.pyplot as plt
+%matplotlib inline
+
+grouped_by_year_4_cylinder = vehicles_non_hybrid_4.groupby(['year']).make.nunique()
+fig = grouped_by_year_4_cylinder.plot()
+fig.set_xlabel('Year')
+fig.set_ylabel('Number of 4-Cylinder Makes')
+print(fig)
+
+#%% step 4
+grouped_by_year_4_cylinder = vehicles_non_hybrid_4.groupby(['year'])
+unique_makes = []
+for name, group in grouped_by_year_4_cylinder:
+    unique_makes.append(set(pd.unique(group['make'])))
+unique_makes = reduce(set.intersection, unique_makes)
+print(unique_makes)
+
+#%% step 5, 6, 7
+boolean_mask = []
+for index, row in vehicles_non_hybrid_4.iterrows():
+    make = row['make']
+    boolean_mask.append(make in unique_makes)
+df_common_makes = vehicles_non_hybrid_4[boolean_mask]
+
+df_common_makes_grouped = df_common_makes.groupby(['year', 'make']).agg(np.mean).reset_index()
+
+from ggplot import geom_line
+ggplot(aes(x='year', y='comb08'), data = df_common_makes_grouped) + geom_line() + facet_wrap('make')
